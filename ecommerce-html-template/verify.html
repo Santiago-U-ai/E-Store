@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Producto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .valid {
+            color: green;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .invalid {
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verificación de Producto</h1>
+        <p id="message">Verificando...</p>
+    </div>
+
+    <script>
+        function getQueryParams() {
+            let params = new URLSearchParams(window.location.search);
+            return {
+                product: params.get("product"),
+                hash: params.get("hash")
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            let params = getQueryParams();
+            let messageElement = document.getElementById("message");
+
+            if (params.product && params.hash) {
+                messageElement.innerHTML = `✅ El producto <strong>${params.product}</strong> es original.`;
+                messageElement.classList.add("valid");
+            } else {
+                messageElement.innerHTML = "❌ Código inválido o producto no reconocido.";
+                messageElement.classList.add("invalid");
+            }
+        });
+    </script>
+</body>
+</html>
