@@ -301,106 +301,25 @@
             }
             
             document.addEventListener("DOMContentLoaded", function() {
-            let productName = "Vestido";
-            let hash = generateHash(productName);
-            document.getElementById("hash1").innerText = hash;
-            
-            let verificationUrl = "verify.html?product=" + encodeURIComponent(productName) + "&hash=" + hash + "&message=La prenda es original";
-            generateQRCode("qrcode1", verificationUrl);
+                const products = [
+                    { name: "Vestido", hashId: "hash1", qrId: "qrcode1" },
+                    { name: "Buso", hashId: "hash2", qrId: "qrcode2" },
+                    { name: "Vestido Largo", hashId: "hash3", qrId: "qrcode3" },
+                    { name: "Camisa", hashId: "hash4", qrId: "qrcode4" },
+                    { name: "Conjunto Hombre", hashId: "hash5", qrId: "qrcode5" }
+                ];
+        
+                products.forEach(product => {
+                    let hash = generateHash(product.name);
+                    document.getElementById(product.hashId).innerText = hash;
+        
+                    let verificationUrl = `verify.html?product=${encodeURIComponent(product.name)}&hash=${hash}&message=La prenda es original`;
+                    generateQRCode(product.qrId, verificationUrl);
+                });
             });
         </script>
 
-        <script>
-            function generateHash(productName) {
-            return btoa(productName + Date.now());
-            }
-            
-            function generateQRCode(id, url) {
-            new QRCode(document.getElementById(id), {
-                text: url,
-                width: 100,
-                height: 100
-            });
-            }
-            
-            document.addEventListener("DOMContentLoaded", function() {
-            let productName = "Buso";
-            let hash = generateHash(productName);
-            document.getElementById("hash2").innerText = hash;
-            
-            let verificationUrl = "verify.html?product=" + encodeURIComponent(productName) + "&hash=" + hash + "&message=La prenda es original";
-            generateQRCode("qrcode2", verificationUrl);
-            });
-        </script>
-
-        <script>
-            function generateHash(productName) {
-            return btoa(productName + Date.now());
-            }
-            
-            function generateQRCode(id, url) {
-            new QRCode(document.getElementById(id), {
-                text: url,
-                width: 100,
-                height: 100
-            });
-            }
-            
-            document.addEventListener("DOMContentLoaded", function() {
-            let productName = "Vestido Largo";
-            let hash = generateHash(productName);
-            document.getElementById("hash3").innerText = hash;
-            
-            let verificationUrl = "verify.html?product=" + encodeURIComponent(productName) + "&hash=" + hash + "&message=La prenda es original";
-            generateQRCode("qrcode3", verificationUrl);
-            });
-        </script>
-
-        <script>
-            function generateHash(productName) {
-            return btoa(productName + Date.now());
-            }
-            
-            function generateQRCode(id, url) {
-            new QRCode(document.getElementById(id), {
-                text: url,
-                width: 100,
-                height: 100
-            });
-            }
-            
-            document.addEventListener("DOMContentLoaded", function() {
-            let productName = "Camisa";
-            let hash = generateHash(productName);
-            document.getElementById("hash4").innerText = hash;
-            
-            let verificationUrl = "verify.html?product=" + encodeURIComponent(productName) + "&hash=" + hash + "&message=La prenda es original";
-            generateQRCode("qrcode4", verificationUrl);
-            });
-        </script>
-
-        <script>
-            function generateHash(productName) {
-            return btoa(productName + Date.now());
-            }
-            
-            function generateQRCode(id, url) {
-            new QRCode(document.getElementById(id), {
-                text: url,
-                width: 100,
-                height: 100
-            });
-            }
-            
-            document.addEventListener("DOMContentLoaded", function() {
-            let productName = "Conjunto Hombre";
-            let hash = generateHash(productName);
-            document.getElementById("hash5").innerText = hash;
-            
-            let verificationUrl = "verify.html?product=" + encodeURIComponent(productName) + "&hash=" + hash + "&message=La prenda es original";
-            generateQRCode("qrcode5", verificationUrl);
-            });
-        </script>
+        
         <!-- Footer Start -->
         <div class="footer">
             <div class="container-fluid">
