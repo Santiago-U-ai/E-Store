@@ -302,11 +302,11 @@
             
             document.addEventListener("DOMContentLoaded", function() {
                 const products = [
-                    { name: "Vestido", hashId: "hash1", qrId: "qrcode1" },
-                    { name: "Buso", hashId: "hash2", qrId: "qrcode2" },
-                    { name: "Vestido Largo", hashId: "hash3", qrId: "qrcode3" },
-                    { name: "Camisa", hashId: "hash4", qrId: "qrcode4" },
-                    { name: "Conjunto Hombre", hashId: "hash5", qrId: "qrcode5" }
+                    { name: "Vestido", hashId: "hash1", qrId: "qrcode1", linkId: "link1" },
+                    { name: "Buso", hashId: "hash2", qrId: "qrcode2", linkId: "link2" },
+                    { name: "Vestido Largo", hashId: "hash3", qrId: "qrcode3", linkId: "link3" },
+                    { name: "Camisa", hashId: "hash4", qrId: "qrcode4", linkId: "link4" },
+                    { name: "Conjunto Hombre", hashId: "hash5", qrId: "qrcode5", linkId: "link5" }
                 ];
         
                 products.forEach(product => {
@@ -315,6 +315,7 @@
         
                     let verificationUrl = `verify.html?product=${encodeURIComponent(product.name)}&hash=${hash}&message=La prenda es original`;
                     generateQRCode(product.qrId, verificationUrl);
+                    document.getElementById(product.linkId).href = verificationUrl;
                 });
             });
         </script>
