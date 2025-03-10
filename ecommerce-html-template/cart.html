@@ -298,34 +298,75 @@
 
 
         <script>
-            function generateHash(productName) {
-            return btoa(productName + Date.now());
-            }
             
-            function generateQRCode(id, url) {
+            class Block {
+                constructor(index, timestamp, data, previousHash = '') {
+                    this.index = index;
+                    this.timestamp = timestamp;
+                    this.data = data;
+                    this.previousHash = previousHash;
+                    this.hash = this.calculateHash();
+                }
+        
+                calculateHash() {
+                    return btoa(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data));
+                }
+            }
+        
+            class Blockchain {
+                constructor() {
+                    this.chain = [this.createGenesisBlock()];
+                }
+        
+                createGenesisBlock() {
+                    return new Block(0, Date.now(), "Genesis Block", "0");
+                }
+            getLatestBlock() {
+                return this.chain[this.chain.length - 1];
+            }
+    
+            addBlock(newBlock) {
+                newBlock.previousHash = this.getLatestBlock().hash;
+                newBlock.hash = newBlock.calculateHash();
+                this.chain.push(newBlock);
+            }
+    
+            getChain() {
+                return this.chain;
+            }
+        }
+    
+        function generateQRCode(id, url) {
             new QRCode(document.getElementById(id), {
                 text: url,
                 width: 100,
                 height: 100
             });
-            }
+        }
+    
             
             document.addEventListener("DOMContentLoaded", function() {
                 const products = [
-                    { name: "Vestido", hashId: "hash1", qrId: "qrcode1", linkId: "link1" },
-                    { name: "Buso", hashId: "hash2", qrId: "qrcode2", linkId: "link2" },
-                    { name: "Vestido Largo", hashId: "hash3", qrId: "qrcode3", linkId: "link3" },
-                    { name: "Camisa", hashId: "hash4", qrId: "qrcode4", linkId: "link4" },
-                    { name: "Conjunto Hombre", hashId: "hash5", qrId: "qrcode5", linkId: "link5" }
+                    { name: "Vestido", hashId: "hash1", qrId: "qrcode1", linkId: "link1", size: "M", color: "Rojo" },
+                    { name: "Buso", hashId: "hash2", qrId: "qrcode2", linkId: "link2", size: "L", color: "Azul" },
+                    { name: "Vestido Largo", hashId: "hash3", qrId: "qrcode3", linkId: "link3", size: "S", color: "Verde" },
+                    { name: "Camisa", hashId: "hash4", qrId: "qrcode4", linkId: "link4", size: "XL", color: "Blanco" },
+                    { name: "Conjunto Hombre", hashId: "hash5", qrId: "qrcode5", linkId: "link5", size: "M", color: "Negro" }
                 ];
         
+        
                 products.forEach(product => {
-                    let hash = generateHash(product.name);
+                    let blockchain = new Blockchain();
+                    blockchain.addBlock(new Block(1, Date.now(), { talla: product.size, color: product.color }));
+        
+                    let hash = blockchain.getLatestBlock().hash;
                     document.getElementById(product.hashId).innerText = hash;
         
-                    let verificationUrl = `verify.html?product=${encodeURIComponent(product.name)}&hash=${hash}&message=La prenda es original`;
+                    let verificationUrl = `verify.html?product=${encodeURIComponent(product.name)}&hash=${hash}&chain=${encodeURIComponent(JSON.stringify(blockchain.getChain()))}`;
                     generateQRCode(product.qrId, verificationUrl);
                     document.getElementById(product.linkId).href = verificationUrl;
+        
+                    console.log(`Blockchain for ${product.name}:`, blockchain);
                 });
             });
         </script>
