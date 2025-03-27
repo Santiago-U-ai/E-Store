@@ -36,23 +36,42 @@
         document.addEventListener("DOMContentLoaded", function() {
             const { product, hash, chain } = getQueryParams();
 
+            const propietarioAnterior = chain.find(block => block.data.propietarioAnterior)?.data.propietarioAnterior || "Juan Perez";
+            const tienda = chain.find(block => block.data.tienda)?.data.tienda || "Adidas";
+            const detalles = chain.find(block => block.data.detalles)?.data.detalles || { talla: "M", color: "Azul" };
+            const lugarCreacion = chain.find(block => block.data.lugarCreacion)?.data.lugarCreacion || "New York";
+            const paisCreacion = chain.find(block => block.data.paisCreacion)?.data.paisCreacion || "EEUU";
+
             document.getElementById('product-info').innerHTML = `
                 <p><strong>Producto:</strong> ${product}</p>
                 <p><strong>Hash:</strong> ${hash}</p>
+                <p><strong>Propietario Anterior:</strong> ${propietarioAnterior}</p>
+                <p><strong>Tienda:</strong> ${tienda}</p>
+                <p><strong>Detalles:</strong> Talla - ${detalles.talla}, Color - ${detalles.color}</p>
+                <p><strong>Lugar de Creación:</strong> ${lugarCreacion}</p>
+                <p><strong>País de Creación:</strong> ${paisCreacion}</p>
                 <p><strong>Mensaje:</strong> La prenda es original</p>
             `;
 
             document.getElementById('blockchain').textContent = JSON.stringify(chain, null, 2);
 
-            document.getElementById('novedad-form').addEventListener('submit', function(event) {
+            document.getElementById('novedad-form').addEventListener('submit', async function(event) {
                 event.preventDefault();
                 const novedad = document.getElementById('novedad').value;
                 const newBlock = new Block(chain.length, Date.now(), { novedad: novedad }, chain[chain.length - 1].hash);
+                await newBlock.calculateHash();
                 chain.push(newBlock);
                 document.getElementById('blockchain').textContent = JSON.stringify(chain, null, 2);
                 document.getElementById('novedad').value = '';
             });
         });
+
+        async function calculateHash(index, previousHash, timestamp, data) {
+            const msg = new TextEncoder().encode(index + previousHash + timestamp + JSON.stringify(data));
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msg);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
 
         class Block {
             constructor(index, timestamp, data, previousHash = '') {
@@ -60,11 +79,11 @@
                 this.timestamp = timestamp;
                 this.data = data;
                 this.previousHash = previousHash;
-                this.hash = this.calculateHash();
+                this.hash = '';
             }
 
-            calculateHash() {
-                return btoa(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data));
+            async calculateHash() {
+                this.hash = await calculateHash(this.index, this.previousHash, this.timestamp, this.data);
             }
         }
     </script>

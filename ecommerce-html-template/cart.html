@@ -319,7 +319,7 @@
                 }
         
                 createGenesisBlock() {
-                    return new Block(0, Date.now(), "Genesis Block", "0");
+                    return new Block(0, Date.now(), "Origen Estados Unidos", "0");
                 }
             getLatestBlock() {
                 return this.chain[this.chain.length - 1];
@@ -359,15 +359,20 @@
                     let blockchain = new Blockchain();
                     blockchain.addBlock(new Block(1, Date.now(), { talla: product.size, color: product.color }));
         
+
+                    
                     let hash = blockchain.getLatestBlock().hash;
                     document.getElementById(product.hashId).innerText = hash;
-        
+
+                    
                     let verificationUrl = `verify.html?product=${encodeURIComponent(product.name)}&hash=${hash}&chain=${encodeURIComponent(JSON.stringify(blockchain.getChain()))}`;
                     generateQRCode(product.qrId, verificationUrl);
                     document.getElementById(product.linkId).href = verificationUrl;
         
                     console.log(`Blockchain for ${product.name}:`, blockchain);
                 });
+
+                
             });
         </script>
 
